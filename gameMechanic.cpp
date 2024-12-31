@@ -10,8 +10,7 @@
 #include <sstream>
 
 int timer = 15;
-
-std::vector<player> players;
+std::vector<std::shared_ptr<player>> players;
 
 gameData GameInfo(const std::string& line){
   gameData data;
@@ -33,13 +32,14 @@ bool answered = false;
 };
 */
 int addPlayer(std::string name) {
-  player p;
-  p.name = std::move(name);
-  p.connected = true;
-  p.lastActive = std::chrono::steady_clock::now();
-  players.push_back(p);
+  auto p = std::make_shared<player>();
+  p->name = std::move(name);
+  p->connected = true;
+  p->lastActive = std::chrono::steady_clock::now();
+  players.push_back(p); // Добавляем shared_ptr в контейнер
   return (players.size() - 1);
 }
+
 
 
 std::string SelectedGame(std::vector<std::string>& vl){

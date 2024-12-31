@@ -5,6 +5,8 @@
 #include <mutex>
 #include <vector>
 #include <string>
+#include <mutex>
+#include <memory>
 #include <asio.hpp>
 using asio::ip::tcp;
 
@@ -25,7 +27,8 @@ struct player {
     bool answered = false;
     bool connected = false;
     std::chrono::steady_clock::time_point lastActive;
-    tcp::socket* socket;
+    std::optional<tcp::socket> socket;  // Changed this line
+    std::mutex playerMutex;
 };
 
 int addPlayer(std::string name);
@@ -33,7 +36,7 @@ gameData GameInfo(const std::string& line);
 std::string SelectedGame(std::vector<std::string>& vl);
 bool answerStatus(std::string answer);
 // players table
-extern std::vector<player> players;
+extern std::vector<std::shared_ptr<player>> players;
 
 
 #define GAMEMECHANIC_H
