@@ -29,6 +29,7 @@ struct player {
     std::chrono::steady_clock::time_point lastActive;
     std::optional<tcp::socket> socket;  // Changed this line
     std::mutex playerMutex;
+    std::string ping;
 };
 
 int addPlayer(std::string name);

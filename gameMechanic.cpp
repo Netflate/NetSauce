@@ -36,6 +36,7 @@ int addPlayer(std::string name) {
   p->name = std::move(name);
   p->connected = true;
   p->lastActive = std::chrono::steady_clock::now();
+  p->ping = "69";
   players.push_back(p); // Добавляем shared_ptr в контейнер
   return (players.size() - 1);
 }

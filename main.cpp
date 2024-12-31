@@ -7,10 +7,52 @@
 #include <fcntl.h>
 #include <winsock2.h>
 #include <asio.hpp>
+#include <cmath>
 #include <mutex>
 
 using asio::ip::tcp;
 std::mutex well_well_well;
+
+void ping_broadcasting () {
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(4));
+        int n = players.size();
+        if (n > 0) {
+            std::string pingList = "playersPing:";
+            for (int i = 0; i < n; i++) {
+                std::lock_guard<std::mutex> lock(players[i]->playerMutex);
+                if (players[i]->connected == true) {
+                    pingList += players[i]->ping + "#";
+                }
+            }
+            std::cout << pingList << std::endl;
+            for (int i = 0; i < n; i++) {
+                std::lock_guard<std::mutex> lock(players[i]->playerMutex);
+                if (players[i]->connected == true) {
+                    try {
+                        size_t bytes_written = asio::write(*(players[i]->socket), asio::buffer(pingList));
+                    } catch (std::system_error& e) {
+                        std::cerr << "Error writing to socket: " << e.what() << std::endl;
+                    }
+                }
+            }
+        }
+    }
+}
+/*
+ * BOTH BROADCASTING FUNCTIONS
+ * ARE SO FUCKING SIMILAR
+ * THAT I COULD PUT IT TO ONE, SOME KIND OF BROADCASTING FUNCTION
+ * BUT
+ * I
+ * DONT
+ * GIVE
+ * A
+ * FUCKING
+ * FUCKIDDY
+ * FUCK
+ */
+
 void Players_broadcasting() {
     std::lock_guard<std::mutex> lock(well_well_well);
     int n = players.size();
@@ -25,16 +67,13 @@ void Players_broadcasting() {
     for (int i = 0; i < n; i++) {
         std::lock_guard<std::mutex> lock(players[i]->playerMutex);
         if (players[i]->connected == true) {
-            std::cout << "TESTinFor" << std::endl;
             try {
                 size_t bytes_written = asio::write(*(players[i]->socket), asio::buffer(playersList));
-                std::cout << "Bytes written: " << bytes_written << std::endl;
             } catch (std::system_error& e) {
                 std::cerr << "Error writing to socket: " << e.what() << std::endl;
             }
         }
     }
-    std::cout << "TEST" << std::endl;
 }
 
 void monitor_clients(int clientid) {
@@ -70,7 +109,6 @@ void handle_client(tcp::socket socket) {
             tcp::socket& working_socket = (clientId == -1) ? socket : *(players[clientId]->socket);
 
             size_t length = working_socket.read_some(asio::buffer(buffer), error);
-            std::cout << "11\n";
             if (!error) {
                 std::string clientMessage(buffer, length);
                 if (clientMessage.find("ping") != std::string::npos) {
@@ -80,7 +118,8 @@ void handle_client(tcp::socket socket) {
                     asio::write(working_socket, asio::buffer("pong"));
                     length = working_socket.read_some(asio::buffer(buffer), error);
                     std::string ping(buffer, length);
-
+                    std::string pingstring = (std::to_string(std::round(std::stof(ping))));
+                    players[clientId]->ping = pingstring.substr(0, pingstring.find('.'));
                     std::cout << "last time active: "
                               << std::chrono::duration_cast<std::chrono::seconds>(
                                      players[clientId]->lastActive.time_since_epoch()
@@ -105,6 +144,7 @@ void handle_client(tcp::socket socket) {
                     Players_broadcasting();
                     std::thread monitor_thread(monitor_clients, clientId);
                     monitor_thread.detach();
+
                 }
                 std::cout << "\ndata collected\n";
                 std::cout << "12\n";
@@ -116,11 +156,12 @@ void handle_client(tcp::socket socket) {
         }
     } catch (const std::exception& e) {
         std::cerr << "Exception caught: " << e.what() << "\n";
-        std::cout << "13\n";
     }
 }
 
 void connecting(tcp::acceptor& acceptor, asio::io_context& io_context) {
+    std::thread ping_thread(ping_broadcasting);
+    ping_thread.detach();
     try {
         std::cout << "Waiting for client connection...\n";
         acceptor.async_accept([&io_context, &acceptor](const asio::error_code& error, tcp::socket socket) {
