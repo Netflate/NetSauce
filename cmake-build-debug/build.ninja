@@ -70,6 +70,13 @@ build CMakeFiles/NetSauce.dir/gameMechanic.cpp.obj: CXX_COMPILER__NetSauce_unsca
   OBJECT_DIR = CMakeFiles\NetSauce.dir
   OBJECT_FILE_DIR = CMakeFiles\NetSauce.dir
 
+build CMakeFiles/NetSauce.dir/server.cpp.obj: CXX_COMPILER__NetSauce_unscanned_Debug C$:/Games/NetSauce/server.cpp || cmake_object_order_depends_target_NetSauce
+  DEP_FILE = CMakeFiles\NetSauce.dir\server.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -IC:/Games/asio-master/asio/include
+  OBJECT_DIR = CMakeFiles\NetSauce.dir
+  OBJECT_FILE_DIR = CMakeFiles\NetSauce.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target NetSauce
@@ -78,7 +85,7 @@ build CMakeFiles/NetSauce.dir/gameMechanic.cpp.obj: CXX_COMPILER__NetSauce_unsca
 #############################################
 # Link the executable NetSauce.exe
 
-build NetSauce.exe: CXX_EXECUTABLE_LINKER__NetSauce_Debug CMakeFiles/NetSauce.dir/main.cpp.obj CMakeFiles/NetSauce.dir/Game.cpp.obj CMakeFiles/NetSauce.dir/gameMechanic.cpp.obj
+build NetSauce.exe: CXX_EXECUTABLE_LINKER__NetSauce_Debug CMakeFiles/NetSauce.dir/main.cpp.obj CMakeFiles/NetSauce.dir/Game.cpp.obj CMakeFiles/NetSauce.dir/gameMechanic.cpp.obj CMakeFiles/NetSauce.dir/server.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lws2_32  -lmswsock  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\NetSauce.dir

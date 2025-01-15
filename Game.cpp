@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "gameMechanic.h"
+#include "server.h"
 
 #include <iostream>
 #include <vector>
@@ -11,6 +12,16 @@ bool gameStarted = false;
 
 void Game::run() {
     std::cout << "starting the game" << std::endl;
+}
+
+
+void gameStarting() {
+    int duration = 10;
+    for (int i = duration; i > 0; --i) {
+        broadcasting("timer:" + std::to_string(i));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+    broadcasting("Started");
 }
 
 

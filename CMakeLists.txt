@@ -7,7 +7,12 @@ set(CMAKE_CXX_STANDARD 23)
 
 include_directories(C:/Games/asio-master/asio/include)
 # Создаём исполняемый файл
-add_executable(NetSauce main.cpp Game.cpp gameMechanic.cpp)
+add_executable(NetSauce
+        main.cpp
+        Game.cpp
+        gameMechanic.cpp
+        server.cpp
+        )
 
 # Подключаем библиотеку Windows Sockets
 target_link_libraries(NetSauce PRIVATE ws2_32 mswsock)

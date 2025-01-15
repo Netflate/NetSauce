@@ -14,6 +14,7 @@ class Game {
     public:
     void run();
 };
+void gameStarting();
 void lobby();
 void start();
 std::vector<std::string> getVariantList();

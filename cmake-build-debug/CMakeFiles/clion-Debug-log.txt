@@ -1,4 +1,4 @@
 "C:\Program Files\JetBrains\CLion 2024.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.3/bin/ninja/win/x64/ninja.exe" -DCMAKE_TOOLCHAIN_FILE=C:\Users\netfl\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake -G Ninja -S C:\Games\NetSauce -B C:\Games\NetSauce\cmake-build-debug
--- Configuring done (0.7s)
+-- Configuring done (0.5s)
 -- Generating done (0.1s)
 -- Build files have been written to: C:/Games/NetSauce/cmake-build-debug
