@@ -18,8 +18,9 @@
 
 
 int main() {
-    srand(time(nullptr));
-    server_starting();
+    game g;
+    g.server_instance.server_starting();
+
 
     return 0;
 }

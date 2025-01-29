@@ -3,6 +3,7 @@
 //
 #include <vector>
 #include <string>
+#include <unordered_set>
 
 #ifndef GAME_H
 #define GAME_H
@@ -10,14 +11,12 @@
 extern bool gameStarted;
 
 
-class Game {
-    public:
-    void run();
-};
-void gameStarting();
-void lobby();
-void start();
-std::vector<std::string> getVariantList();
+
+
+
+
+
+
 
 
 #endif //GAME_H
