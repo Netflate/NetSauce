@@ -15,22 +15,26 @@ using asio::ip::tcp;
 
 class game {
 public:
-    int connectedPlayers;
+    int connectedPlayers = 0 ;
 
     class player {
     public:
         std::string name; // nickname
         // related to server side
         bool connected = false;
+        float responseTime;
         std::string ping;
         std::chrono::steady_clock::time_point lastActive;
         std::optional<tcp::socket> socket;
         std::mutex playerMutex;
 
+
         std::string getAnswer();
         void setAnswer(std::string& answer);
         void setAnswered(bool newStatus);
-        bool getAnswered();
+        bool getAnswered() const;
+
+        int returnScore() const ;
         int& addnReturnScore(const int& toAdd);
     private:
         // directly related to the game
@@ -51,8 +55,11 @@ public:
             std::string link;
             std::string question_cat;
             std::string name;
+            std::string description;
+            std::string abbreviation;
         };
 
+        bool getGameEnd() const;
         void setGameEnd(bool);
 
         int getTimer() const;
@@ -63,17 +70,19 @@ public:
         std::unordered_set<std::string> getType() const;
         void setCat(const std::unordered_set<std::string>& cats);
         void setType(const std::unordered_set<std::string>& types);
-        void setWinningScore(int score);
 
+        void setWinningScore(int score);
+        int getWinningScore() const;
 
         std::string normalised(const std::string& str);
         bool answer(std::string answer);
         void launchRound();
-        gameData GameInfo(const std::string line);
+        gameData GameInfo(std::string line);
         std::string SelectedGame(std::unordered_map<int, std::string>& variantList);
         std::vector<std::string> splitString(const std::string& s, char delim);
         std::unordered_map<int, std::string> getVariantList();
         int getAnswering() const;
+        std::string getTrueAnswer() const;
 
 
         void setSignal(Signal sig) {
@@ -91,7 +100,10 @@ public:
         game* parent;
 
         float timeLeft ;
+
         std::string trueAnswer;
+        std::string trueAnswerAbbreviation;
+
         int answering; // by default will be connected players number, decreasing with players answering right down to 0
         bool end;
         int timer;
@@ -111,7 +123,6 @@ public:
         std::string playersList = "";
         std::vector<std::shared_ptr<player>> players;
         float firstPlayerResponseTime;
-        int timeInterval;
 
 
         void signalHandler();
@@ -122,7 +133,7 @@ public:
             std::cout << "SessionServer constructed, signal handler connected." << std::endl;
         }
 
-
+        std::string winningPlayer() const;
         void handlingPlayerAnswer(std::string& answer, const int& clientId);
         void messaging(const std::string messageForClient, int i);
         void broadcasting(const std::string messageForClients);

@@ -1,10 +1,2 @@
-0;image;firefox_F3vPML2Hga;game;The Witcher 3
-1;image;firefox_7QFZ7wD3i8;game;Hollow Knight
-2;image;firefox_R9k3y2TQhv;game;Dark Souls III
-3;image;firefox_8hFJfTzu1r;game;Celeste
-4;image;firefox_K0GzLv5J3P;game;Sekiro: Shadows Die Twice
-5;image;firefox_2z9TgLp0V7;game;Dead Cells
-6;image;firefox_W0zYm8k7f4;game;Cuphead
-7;image;firefox_J4dG3Bzx9v;game;Inside
-8;image;firefox_5Kz5FqWjLh;game;Limbo
-9;image;firefox_Q3y8VrV0M9;game;Undertale
+1;image;firefox_7QFZ7wD3i8;game;Hollow Knight;One of the best indie existing games so far;
+9;image;firefox_Q3y8VrV0M9;game;Undertale; Best 2015 indie game, + only lil bro on jed watches too many of it in tiktok;

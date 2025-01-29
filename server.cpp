@@ -26,13 +26,32 @@ using asio::ip::tcp;
 
 
 void game::SessionServer::signalHandler() {
-    int n = players.size();
-    for (size_t i = 0; i < n; i++) {
-        std::lock_guard<std::mutex> lock(players[i]->playerMutex);
-        players[i]->setAnswered(false);
+    if (!gameplay.getGameEnd()) {               // if the game hasn't ended, as a new question will appear soon
+        size_t const n = players.size();        // it sends every player's answer status to false
+        for (size_t i = 0; i < n; i++) {        // and sends them true answer to the last question
+            players[i]->setAnswered(false);  // answerStatus
+        }
+        broadcasting(gameplay.getTrueAnswer()); // trueAnswer
+    }
+    else {                                      // on the other hand, if the game already ended, we send to everyone that fact, and the winner, which is the one, who has the highest score
+        broadcasting("the game has ended");
+        broadcasting(winningPlayer());
     }
 }
 
+std::string game::SessionServer::winningPlayer() const {
+    int maxScore = 0;
+    int id = 0 ;
+    for (size_t i = 0; i < players.size(); i++) {
+        if (players[i]->connected) {
+            if (players[i]->returnScore() > maxScore) {
+                maxScore = players[i]->returnScore();
+                id = i;
+            }
+        }
+    }
+    return (players[id]->name);
+}
 
 
 
@@ -42,26 +61,25 @@ void game::SessionServer::handlingPlayerAnswer( std::string& answer, const int& 
         players[clientId]->setAnswer(answer);
         if (gameplay.answer(answer)) {
             const float responseTime = static_cast<float>(gameplay.getTimer()) - gameplay.getHowMuchTimeLeft();
+            players[clientId]->responseTime = responseTime;
             int toAdd ;
             players[clientId]->setAnswered(true);
             if (parent->connectedPlayers - 1 == gameplay.getAnswering()) {
                 toAdd = 10;
-                const float timeLeft = gameplay.getHowMuchTimeLeft();
                 firstPlayerResponseTime = responseTime ;
-                timeInterval = timeLeft / 8 ;
             }
             else {
+                float timeInterval = static_cast<float>(gameplay.getTimer()) / 8;
                 toAdd = static_cast<int>(9 - ((responseTime - firstPlayerResponseTime) / timeInterval));
             }
-            if (players[clientId]->addnReturnScore(toAdd) >= 150) { gameplay.setGameEnd(true); }
+            if (players[clientId]->addnReturnScore(toAdd) >= gameplay.getWinningScore()) { gameplay.setGameEnd(true); }
         }
-
     }
 }
 
 // functions related to class player variables, which are player's score, answer, and answer status
 
-bool game::player::getAnswered() {
+bool game::player::getAnswered() const {
     return answered;
 }
 
@@ -70,7 +88,9 @@ void game::player::setAnswered(bool newStatus) {
 }
 
 
-
+int game::player::returnScore() const {
+    return score;
+}
 
 int& game::player::addnReturnScore(const int& toAdd) {
     score+= toAdd;
@@ -223,6 +243,7 @@ void game::SessionServer::handle_client(tcp::socket socket) {
                     playersBroadcasting();
                     broadcasting("ChatTechnical:" + clientMessage + " joined");
                     parent->connectedPlayers++;
+
                     std::thread monitor_thread(&game::SessionServer::monitor_clients, this, clientId);
                     monitor_thread.detach();
 
@@ -258,13 +279,11 @@ void game::SessionServer::handle_client(tcp::socket socket) {
 
 
 void game::SessionServer::gameStarting() {
-/* ЭТО НАДО БУДЕТ ВЕРНУТЬ, КОГДА СЕРВАК НАЧНЁТ РАБОТАТЬ С ПОЛЦНОЦЕННЫМИ КЛИЕНТАМИ, А НЕ С ОДНИМ ТЕСТ КЛИЕНТОМ
-    int duration = 2;
+    int duration = 5;
     for (int i = duration; i > 0; --i) {
         broadcasting("timer:" + std::to_string(i));
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-*/
 
     broadcasting("Started");
     parent->gameCore_instance.launchRound();

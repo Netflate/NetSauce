@@ -30,12 +30,25 @@ bool gameStarted = false;
 
 
 // Методы для работы с категориями, типами вопросов, и ссылкой на актуальный вопрос, чтобы можно было к нему обращаться из функции класса serverSession
+std::string game::gameCore::getTrueAnswer() const {
+    return trueAnswer;
+}
+
+bool game::gameCore::getGameEnd() const {
+    return end;
+}
+
+
 float game::gameCore::getHowMuchTimeLeft() const {
     return timeLeft;
 }
 
-void game::gameCore::setWinningScore(int score) {
+void game::gameCore::setWinningScore(const int score) {
     winningScore = score;
+}
+
+int game::gameCore::getWinningScore() const {
+    return winningScore;
 }
 
 int game::gameCore::getAnswering() const {
@@ -90,6 +103,8 @@ void game::gameCore::launchRound() {
 
     while (!end) {
         answering = parent->connectedPlayers;
+        std::cout << RED << "ANSWERING : " <<parent->connectedPlayers  << RESET << "\n";
+
         if (variantList.size()==0) {
             // тут наверное надо добавить функцию, которая скажет клиенту, что список закончился;
             std::cout
@@ -99,10 +114,12 @@ void game::gameCore::launchRound() {
             end = true;
             break;
         }
-        std::string answer; // в будущем клиент будет посылать на сервак answer:example, и вот как раз отсюда и появится переменная answer
         bool roundEnd = true;
         gameData currentQuestion = GameInfo(SelectedGame(variantList));
+
         trueAnswer = currentQuestion.name;
+        trueAnswerAbbreviation = currentQuestion.abbreviation;
+
         
         auto start = std::chrono::steady_clock::now();
         auto update = start;
@@ -120,17 +137,18 @@ void game::gameCore::launchRound() {
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-        triggerSignal();  // triggering signal that changes answer status of all connected players to false
-        // nickname:testing
-        // startingGame
-        // Answer:
+        triggerSignal();  // triggering signal that changes answer status of all connected players to false, and reveals all player's answer
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    triggerSignal();  // If end=true, it instead sends to all clients, that the game has ended
+
     }
 }
 
 
+
 bool game::gameCore::answer(std::string answer) {
 
-    if (answer == trueAnswer || answer.find(trueAnswer) != std::string::npos) {
+    if (answer == trueAnswer || answer == trueAnswerAbbreviation ||  answer.find(trueAnswer) != std::string::npos) {
         std::cout << "\n right answer; \n" ;
         answering -= 1;
         return true;
@@ -145,17 +163,36 @@ bool game::gameCore::answer(std::string answer) {
 }
 
 std::string game::gameCore::normalised(const std::string& str) {
-    std::string normalized ;
-    for (const auto& c : str) {
-        if (c != '\'' && c != ' ' && c != ':' && c != ';' && (c > '9' || c < '0') ) {
-            normalized.push_back(tolower(c));
+    std::string normalized;
+    std::istringstream iss(str);
+    std::string word;
+
+    while (iss >> word) {
+        std::string lowerWord;
+        for (char c : word) {
+            lowerWord.push_back(std::tolower(c));
+        }
+
+        // Пропускаем слова "the" и "i"
+        if (lowerWord == "the") {
+            continue;
+        }
+
+        // Обрабатываем символы слова
+        for (char c : word) {
+            if (c != '\'' && c != ':' && c != ';' && (c > '9' || c < '0')) {
+                normalized.push_back(std::tolower(c));
+            }
         }
     }
+    std::cout << normalized << "\n"<< std::endl;
+
     return normalized;
 }
 
-game::gameCore::gameData game::gameCore::GameInfo(const std::string line){
-    game::gameCore::gameData data;
+
+game::gameCore::gameData game::gameCore::GameInfo(std::string line){
+    gameData data;
     std::string temp;
     std::istringstream stream(line);
     std::getline(stream, temp, ';');
@@ -168,6 +205,10 @@ game::gameCore::gameData game::gameCore::GameInfo(const std::string line){
     std::getline(stream, data.question_cat, ';');
     // answer or simply the name
     std::getline(stream, data.name, ';');
+    // game undirect description, you can call that a hint
+    std::getline(stream, data.description, ';');
+    // game name abbreviation, simple example: Counter strike global offensive -> csgo
+    std::getline(stream, data.abbreviation, ';');
 
     return data;
 }
