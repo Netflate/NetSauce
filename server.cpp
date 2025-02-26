@@ -52,7 +52,7 @@ void game::SessionServer::signalHandler() {
         std::this_thread::sleep_for(std::chrono::seconds(11));
         playersBroadcasting();
         players_game_information_reset();
-        messaging("Retard:" + questionCatsList(), leader_player_id); // resending the first player info that he is the leader, and can start the game or change its settings
+        messaging("Leader:" + questionCatsList(), leader_player_id); // resending the first player info that he is the leader, and can start the game or change its settings
     }
 }
 
@@ -249,7 +249,7 @@ void game::SessionServer::playersBroadcasting() {
         }
     }
     if (playersListNew.substr(0, playersListNew.find("#")) != playersList.substr(0, playersList.find("#"))) {
-        messaging("Retard:" + questionCatsList(), j);
+        messaging("Leader:" + questionCatsList(), j);
         leader_player_id = j;
     }
     playersList = std::move(playersListNew);
