@@ -1,2 +1,25 @@
-1;image;firefox_7QFZ7wD3i8;game;Hollow Knight;One of the best indie existing games so far;
-9;image;firefox_Q3y8VrV0M9;game;Undertale; Best 2015 indie game, + only lil bro on jed watches too many of it in tiktok;
+1;video;res://videos/fgd6df6gdfsds.ogv;brainrot;What's that?; lil bro's last words;2.5;5;
+2;image;res://images/firefox_2TaHDrRTmP.png;game;Buckshot Roulette;Russian Roulette;
+3;image;res://images/firefox_f5IPUHAna6.png;game;Fran Bow;My favourite childhood game;
+4;image;res://images/header.jpg;game;Hollow Knight;Masterpiece;
+5;image;res://images/maxresdefault.jpg;game;The Witcher 3: Wild Hunt;Ataa's favourite game, but its pretty boring tho;
+6;image;res://images/ss_8640d9db74f7cad714f6ecfb0e1aceaa3f887e58.600x338.jpg;game;Cyberpunk 2077;We have a city to burn;
+7;image;res://images/ss_4ce07ae360b166f0f650e9a895a3b4b7bf15e34f.600x338.jpg;game;Red Dead Redemption 2;dead, but red;rdr;
+8;image;res://images/ss_6422d297347258086b389e3d5d9c0e0c698312e4.1920x1080.jpg;game;Stardew Valley;A nice farm game;
+9;image;res://images/ss_13ec9b7b0ad4d154a99a8cbbc4a0c12c02d0421f.600x338.jpg;game;Among Us;When the imposter is sus;
+10;image;res://images/VHighThumb.jpg;game;League of legends; shit game shit community shit players;lol;
+11;image;res://images/jkfdsjlkdsf.jpg;game;Dota 2;not shit game, not a shit community, shit players tho;
+12;image;res://images/1f9a6095-bc5d-458a-b36c-20e8dbcb4df5.jpg;game;Fortnite;Jed's game ;
+13;image;res://images/ss_34e6660705cfe47d2b2f95189c37f7cb77f75ca6.1920x1080.jpg;game;Hades;Idk tf is this ;
+14;image;res://images/ss_34e6660705cfe47d2b2f95189c37f7cb77f75ca6.1920x1080.jpg;game;Hades;Idk tf is this ;
+15;image;res://images/Diesel_productv2_celeste_home_00-1920x1080-656978e07c631e4fb1dc5d2f435c536edaafd8d5.jpg;game;Celeste;Pixel KZ, Jed's worst nightmate;
+16;video;res://videos/TENSE1983-BE-LIKE.ogv;brainrot;bad mouse;TROLLER;7;7;
+17;politics;res://images/`.jpg;Person;Putin;Terraria CEO;
+18;image;res://images/firefox_MaEIMCoTKl.png;streamer;Jynxzi;Imagine playing R6S on console;
+19;image;res://images/firefox_3SAtzwZNDH.png;rappers;Dababy;Lets goooooooo;
+20;image;res://images/images.jpg;series;la passion;Whats this ?;
+21;image;res://images/fsdfds.webp;game;Lies of P;Game name? Souls like btw;lp
+22;image;res://images/ss_b7165373da28ac0088fb89c6444aa2de6dd68bca.1920x1080.jpg;game;Palworld;Game name? Pokemon game clone, idk;
+23;image;res://images/SS_1.webp;game;Enter the Gungeon;Game name? Cool rogue-like indie game;
+24;image;res://images/fsdfsdfsty-amazing-now-v0-m06q08wp89id1.webp;game;Company of Heroes 3;Game name? Honesly, no fucking idea tf is this;
+25;image;res://images/images.jpg;game;Jerkmate;Game name? Game of the year btw;

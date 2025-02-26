@@ -14,13 +14,17 @@
 
 
 
-
-
-
 int main() {
-    game g;
-    g.server_instance.server_starting();
-
-
+    while (true) {  // Бесконечный цикл для поддержания работы сервера
+        try {
+            game g;
+            g.server_instance.server_starting();
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Server crashed: " << e.what() << "\n";
+            std::cerr << "Restarting server...\n";
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+        }
+    }
     return 0;
 }

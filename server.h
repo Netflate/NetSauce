@@ -16,7 +16,17 @@ using asio::ip::tcp;
 class game {
 public:
     int connectedPlayers = 0 ;
+    int skippingPlayers = 0;
+    void reset() {
+        connectedPlayers = 0;
+        gameCore_instance = gameCore(this);
 
+        // reconnecting signals
+        server_instance.reconnectSignals();
+
+        // resetting some server information
+        server_instance.resetSession();
+    }
     class player {
     public:
         std::string name; // nickname
@@ -34,6 +44,7 @@ public:
         void setAnswered(bool newStatus);
         bool getAnswered() const;
 
+        void setScore(const int sc);
         int returnScore() const ;
         int& addnReturnScore(const int& toAdd);
     private:
@@ -46,6 +57,7 @@ public:
     class gameCore {
     public:
         using Signal = std::function<void()>;
+        using ParamSignal = std::function<void(const std::string&)>;
 
         gameCore(game* g) : parent(g), answering(g->connectedPlayers) {};
 
@@ -57,6 +69,10 @@ public:
             std::string name;
             std::string description;
             std::string abbreviation;
+
+            std::string pause;   // if question_type == "video"
+            std::string show;
+
         };
 
         bool getGameEnd() const;
@@ -83,8 +99,9 @@ public:
         std::unordered_map<int, std::string> getVariantList();
         int getAnswering() const;
         std::string getTrueAnswer() const;
+        std::string questionInfo;
 
-
+        // First signal
         void setSignal(Signal sig) {
             std::cout << "Signal handler set." << std::endl;
             signal = sig;
@@ -95,6 +112,16 @@ public:
                 signal();
             }
         }
+        // second one
+        void setParamSignal(ParamSignal sig) {
+            paramSignal = sig;
+        }
+        void triggerParameterSignal(const std::string& stringToSend) {
+            if (paramSignal) {
+                paramSignal(stringToSend);
+            }
+        }
+
 
     private:
         game* parent;
@@ -111,28 +138,51 @@ public:
 
         std::unordered_set<std::string> categories;
         std::unordered_set<std::string> questions_type;
+
         Signal signal;
+        ParamSignal paramSignal;
     };
 
     class SessionServer {
     private:
         game* parent;
         gameCore& gameplay; // making object gameplay a part of sessionServer class
+        int leader_player_id;
 
+        bool gameStarted = false;
         std::mutex well_well_well;
         std::string playersList = "";
+        std::unordered_set<std::string> used_nicknames;
         std::vector<std::shared_ptr<player>> players;
         float firstPlayerResponseTime;
 
 
+        std::string questionCatsList();
         void signalHandler();
+        void paramSignalHandler(const std::string& stringToSend);
 
     public:
         SessionServer(game* g) : parent(g), gameplay(g->gameCore_instance) {
+            reconnectSignals();
+            std::cout << "SessionServer constructed, signal handlers connected." << std::endl;
+        }
+        // reconnecting signals, important for server resetting
+        void reconnectSignals() {
             gameplay.setSignal([this]() { signalHandler(); });
-            std::cout << "SessionServer constructed, signal handler connected." << std::endl;
+            gameplay.setParamSignal([this](const std::string& m) {
+                paramSignalHandler(m);
+            });
         }
 
+        void resetSession() {
+            players.clear();
+            playersList = "";
+            firstPlayerResponseTime = 0;
+            gameStarted = false;
+            // Добавьте сброс других необходимых переменных
+        }
+        void players_game_information_reset();
+        std::unordered_set<std::string> parseCategories(const std::string& categoriesStr, char delimiter);
         std::string winningPlayer() const;
         void handlingPlayerAnswer(std::string& answer, const int& clientId);
         void messaging(const std::string messageForClient, int i);
