@@ -2,7 +2,7 @@
 
 ## Overview
 This repository contains the server-side component of a multiplayer guessing game. The game is built around a question-and-answer format where players try to identify games, movies, or other subjects based on images, videos, or text clues.
-It was pretty much copied from a web multiplayer game [popSauce https://jklm.fun] 
+It was pretty much copied from a web multiplayer game [popSauce](https://jklm.fun) 
 ## Project Structure
 The server is built with C++ and is organized into several key components:
 
