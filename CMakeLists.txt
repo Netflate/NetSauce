@@ -10,7 +10,6 @@ include_directories(C:/Games/asio-master/asio/include)
 add_executable(NetSauce
         main.cpp
         Game.cpp
-        gameMechanic.cpp
         server.cpp
         )
 
