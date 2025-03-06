@@ -15,7 +15,7 @@
 
 
 int main() {
-    while (true) {  // Бесконечный цикл для поддержания работы сервера
+    while (true) {  // Infinite loop to keep the server running
         try {
             game g;
             g.server_instance.server_starting();
